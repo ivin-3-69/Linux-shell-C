@@ -96,7 +96,7 @@ void lsordinary(char *filene)
     }
 }
 
-void ls(char *CWD, char *HOME, char *input)
+void ls(char *CWD, char *HOME, char *input, char **args, int n)
 {
     struct dirent *pDirent;
     const char s[] = " \"\n\t\r";
@@ -104,6 +104,20 @@ void ls(char *CWD, char *HOME, char *input)
     char *filename;
     token = strtok(input, s);
     token = strtok(NULL, s);
+    int i = 0;
+    while (i < n)
+    {
+        if (strcmp(args[i], "-a") == 0)
+            hide = 1;
+        else if (strcmp(args[i], "-l") == 0)
+            detail = 1;
+        else if (strcmp(args[i], "-al") == 0 || strcmp(args[i], "-la") == 0)
+        {
+            detail = 1;
+            hide = 1;
+        }
+        i++;
+    }
     if (token == NULL)
     {
         if (dirr == 0)
@@ -131,26 +145,44 @@ void ls(char *CWD, char *HOME, char *input)
         {
             dirr = 1;
             if (detail == 0)
+            {
                 lsordinary(HOME);
+                printf("\n");
+            }
             else if (detail == 1)
+            {
                 lsl(HOME);
+                printf("\n");
+            }
         }
         else
         {
             dirr = 1;
             if (detail == 0)
+            {
                 lsordinary(token);
+                printf("\n");
+            }
             else if (detail == 1)
+            {
                 lsl(token);
+                printf("\n");
+            }
         }
         token = strtok(NULL, s);
     }
     if (dirr == 0)
     {
         if (detail == 0)
+        {
             lsordinary(".");
+            printf("\n");
+        }
         else if (detail == 1)
+        {
             lsl(".");
+            printf("\n");
+        }
         dirr = 1;
     }
     hide = 0;

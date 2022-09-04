@@ -20,7 +20,8 @@
 void prompt(char *CWD, char *HOME, char *a);
 void cd(char *CWD, char *HOME, char *input);
 void echo(char *CWD, char *HOME, char *input);
-void ls(char *CWD, char *HOME, char *input);
+void ls(char *CWD, char *HOME, char *input, char **args, int n);
 void pinfo(char *CWD, char *HOME, char *input);
+void run(char *CWD, char *HOME, char *instr);
 
 #endif

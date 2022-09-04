@@ -10,6 +10,5 @@ int main()
     {
         prompt(CWD, HOME, a);
         scanf("%[^\n]%*c", a);
-        int dirsize = strlen(a);
     }
 }
