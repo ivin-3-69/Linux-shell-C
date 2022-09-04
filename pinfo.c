@@ -64,5 +64,5 @@ void pinfo(char *HOME, char *PWD, char *input)
         }
     }
     else
-        printf("N/A\n"); 
+        printf("N/A\n");
 }
