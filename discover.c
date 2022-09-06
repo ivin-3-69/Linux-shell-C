@@ -4,21 +4,16 @@ int alldir = 0;
 int direxist = 0;
 int fileexist = 0;
 
-int isitDir(const char *fileName)
-{
-    struct stat path;
-
-    stat(fileName, &path);
-
-    return S_ISREG(path.st_mode);
-}
-
 void show(char *dirname, char *filename)
 {
     char **dirrrr = (char **)malloc(sizeof(char *) * 100);
-    dirrrr[0] = (char *)malloc(sizeof(char) * strlen(dirname) + 10);
-    strcpy(dirrrr[0], dirname);
+    int dirposs = 0;
+    dirrrr[dirposs] = (char *)malloc(sizeof(char) * strlen(dirname) + 10);
+    char ivin[2048];
+    strcpy(ivin, filename);
+    strcpy(dirrrr[dirposs], dirname);
     int i = 0;
+
     while (dirrrr[i] != NULL)
     {
         struct dirent *pDirent;
@@ -26,55 +21,74 @@ void show(char *dirname, char *filename)
         pDir = opendir(dirrrr[i]);
         while ((pDirent = readdir(pDir)) != NULL)
         {
-            printf("%s\n", pDirent->d_name);
+            char *namename = (char *)malloc(sizeof(char) * 2000);
+            sprintf(namename, "%s/%s", dirrrr[i], pDirent->d_name);
+            // printf("%d\n", opendir(namename));
+            if (opendir(namename) > 0)
+            {
+                if (pDirent->d_name[0] != '.')
+                {
+                    if (alldir == 1)
+                        printf("%s\n", namename);
+                    dirposs++;
+                    dirrrr[dirposs] = (char *)malloc(sizeof(char) * strlen(namename) + 10);
+                    strcpy(dirrrr[dirposs], namename);
+                }
+            }
+            else
+            {
+                if (fileexist == 1)
+                {
+                    if (strcmp(pDirent->d_name, ivin) == 0)
+                    {
+                        printf("%s\n", namename);
+                    }
+                }
+                else if (allfiles == 1)
+                    printf("%s\n", namename);
+            }
+            free(namename);
         }
-        closedir(pDir);
-        printf("\n\\n\n\n");
-        if (isitDir("a") == 0)
-            printf("%s\n", "a");
         i++;
     }
-    struct dirent *pDirent;
-    DIR *pDir;
-    pDir = opendir(dirname);
+
+    free(dirrrr);
 }
 
 void discover(char *CWD, char *HOME, char *input, char **args, int n)
 {
 
     const char s[] = " \"\n\t\r";
-    int i = 1;
+    int j = 1;
     char *dirname = (char *)malloc(sizeof(char) * 2000);
     char *filename = (char *)malloc(sizeof(char) * 2000);
-    while (args[i] != NULL)
+    while (j < n)
     {
-        if (strcmp(args[i], "-d") == 0)
+        if (strcmp(args[j], "-d") == 0)
             alldir = 1;
-        else if (strcmp(args[i], "-f") == 0)
+        else if (strcmp(args[j], "-f") == 0)
             allfiles = 1;
-        else if (strcmp(args[i], ".") == 0 || strcmp(args[i], "..") == 0 || strcmp(args[i], "~") == 0)
+        else if (strcmp(args[j], ".") == 0 || strcmp(args[j], "..") == 0 || strcmp(args[j], "~") == 0)
         {
-
-            strcpy(dirname, args[i]);
+            strcpy(dirname, args[j]);
             direxist = 1;
         }
         else
         {
-            if (args[i][0] == '.')
+            if (args[j][0] == '.')
             {
-                strcpy(dirname, args[i]);
+                strcpy(dirname, args[j]);
                 direxist = 1;
             }
             else
             {
-                strcpy(filename, args[i]);
+                strcpy(filename, args[j]);
                 fileexist = 1;
             }
         }
-        i++;
+        j++;
     }
-    allfiles = 0;
-    alldir = 0;
+
     char *token;
     token = strtok(input, s);
     token = strtok(NULL, s);
@@ -83,13 +97,18 @@ void discover(char *CWD, char *HOME, char *input, char **args, int n)
     {
         strcpy(dirname, ".");
         direxist = 1;
+        allfiles = 1;
+        alldir = 1;
     }
-
+    if (alldir == 1 && fileexist == 0)
+    {
+        strcpy(dirname, ".");
+    }
     show(dirname, filename);
-    // printf("\n directory name ");
-    // printf("%s ", dirname);
-    // printf("\n\n file name ");
-    // printf("%s ", filename);
 
+    allfiles = 0;
+    alldir = 0;
+    direxist = 0;
+    fileexist = 0;
     return;
 }

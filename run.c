@@ -60,6 +60,11 @@ void run(char *CWD, char *HOME, char *instr)
             if (!backgrnd)
             {
                 wait(NULL);
+                return;
+            }
+            else
+            {
+                return;
             }
         }
     }
