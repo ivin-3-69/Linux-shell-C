@@ -24,5 +24,5 @@ void ls(char *CWD, char *HOME, char *input, char **args, int n);
 void pinfo(char *CWD, char *HOME, char *input);
 void run(char *CWD, char *HOME, char *instr);
 void discover(char *CWD, char *HOME, char *input, char **args, int n);
-
+void delete (char *HOME);
 #endif

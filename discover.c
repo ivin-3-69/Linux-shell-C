@@ -30,6 +30,7 @@ void show(char *dirname, char *filename)
                 {
                     if (alldir == 1)
                         printf("%s\n", namename);
+
                     dirposs++;
                     dirrrr[dirposs] = (char *)malloc(sizeof(char) * strlen(namename) + 10);
                     strcpy(dirrrr[dirposs], namename);
@@ -104,6 +105,11 @@ void discover(char *CWD, char *HOME, char *input, char **args, int n)
     {
         strcpy(dirname, ".");
     }
+    if (allfiles == 0 && fileexist == 0)
+    {
+        allfiles = 1;
+    }
+
     show(dirname, filename);
 
     allfiles = 0;

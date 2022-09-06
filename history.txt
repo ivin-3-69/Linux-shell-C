@@ -1,0 +1,19 @@
+exit
+discover ./glock
+discover ./glock -f
+discover ./glock
+sleep 10 &
+pinfo
+slepp 10&
+sleep 10 &
+pinfo
+sleep 10
+sleep 2
+sleep 2 &
+slee[ 2&
+sleep 2&
+sleep 2 &
+gedit aa.c
+gedit a&
+gedit a.c&
+gedit a.cpp &
