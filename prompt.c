@@ -27,7 +27,7 @@ void prompt(char *CWD, char *HOME, char *a)
     }
 
     if (strcmp(HOME, CWD) == 0)
-        printf("<%s@%s:~>", user, hostbuffer);
+        printf("\x1B[0m<\x1B[1;32m%s@%s\x1B[0m:\x1B[1;34m~\x1B[0m>", user, hostbuffer);
     else
-        printf("<%s@%s:~%s>", user, hostbuffer, CWD);
+        printf("\x1B[0m<\x1B[1;32m%s@%s\x1B[0m:\x1B[1;34m~%s\x1B[0m>", user, hostbuffer, CWD);
 }

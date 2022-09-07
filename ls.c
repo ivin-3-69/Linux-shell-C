@@ -11,6 +11,17 @@ int isDir(const char *fileName)
 
     return S_ISREG(path.st_mode);
 }
+static int myCompare(const void *a, const void *b)
+{
+
+    // setting up rules for comparison
+    return strcmp(*(const char **)a, *(const char **)b);
+}
+void sort(char **arr, int n)
+{
+    qsort(arr, n, sizeof(const char *), myCompare);
+}
+
 void lsl(char *filene)
 {
     struct dirent *pDirent;
@@ -74,25 +85,48 @@ void lsl(char *filene)
 }
 void lsordinary(char *filene)
 {
+    int filepos = 0;
+    char **arr = (char **)malloc(sizeof(char *) * 100);
     struct dirent *pDirent;
     DIR *pDir;
     if (isDir(filene) != 0)
-        printf("%s\n", filene);
+    {
+        arr[filepos] = (char *)malloc(sizeof(char) * strlen(filene) + 10);
+        strcpy(arr[filepos], filene);
+        filepos++;
+    }
     else
     {
         pDir = opendir(filene);
-
         while ((pDirent = readdir(pDir)) != NULL)
         {
             if (hide == 1)
-                printf("%s\n", pDirent->d_name);
+            {
+                arr[filepos] = (char *)malloc(sizeof(char) * strlen(pDirent->d_name) + 10);
+                strcpy(arr[filepos], pDirent->d_name);
+                filepos++;
+                // printf("%s\n", pDirent->d_name);
+            }
             else if (hide == 0)
             {
                 if (pDirent->d_name[0] != '.' && pDirent->d_name[strlen(pDirent->d_name) - 1] != '~')
-                    printf("%s\n", pDirent->d_name);
+                {
+                    // printf("%s\n", pDirent->d_name);
+                    arr[filepos] = (char *)malloc(sizeof(char) * strlen(pDirent->d_name) + 10);
+                    strcpy(arr[filepos], pDirent->d_name);
+                    filepos++;
+                }
             }
         }
         closedir(pDir);
+    }
+
+    sort(arr, filepos);
+    int kk = 0;
+    while (kk < filepos)
+    {
+        printf("%s\n", arr[kk]);
+        kk++;
     }
 }
 
