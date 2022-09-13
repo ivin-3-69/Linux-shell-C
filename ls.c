@@ -125,6 +125,9 @@ void lsordinary(char *filene)
     int kk = 0;
     while (kk < filepos)
     {
+        struct stat name;
+        // if(!isDir(arr[kk])) printf("\033[1;34m%s\n", arr[kk]);
+        // else if((stat(arr[kk], &name)==0) && name.st_mode & S_IXUSR) printf("\033[1;32m%s\n", arr[kk]);
         printf("%s\n", arr[kk]);
         kk++;
     }

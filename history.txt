@@ -1,19 +1,19 @@
-sleep 2 &
-slee[ 2&
-sleep 2&
-sleep 2 &
-gedit aa.c
-gedit a&
-gedit a.c&
-gedit a.cpp &
-ls
-ls .
-ls
-s
-ls
 ls -l
 ls
 cd glock
 cd ..
 clear
 exit
+cd ..
+cd
+cd ..
+cd OSN
+cd
+cd ..
+cd ~
+cd pussy
+ls
+ls -l
+ls
+ls -l
+ls
