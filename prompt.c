@@ -31,3 +31,4 @@ void prompt(char *CWD, char *HOME, char *a)
     else
         printf("\x1B[0m<\x1B[1;32m%s@%s\x1B[0m:\x1B[1;34m~%s\x1B[0m>", user, hostbuffer, CWD);
 }
+
