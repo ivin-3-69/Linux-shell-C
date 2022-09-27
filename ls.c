@@ -2,6 +2,8 @@
 
 int hide = 0;
 int detail = 0;
+int printfile = 0;
+char filenammmme[1000] = "";
 int dirr = 0;
 int isDir(const char *fileName)
 {
@@ -13,8 +15,6 @@ int isDir(const char *fileName)
 }
 static int myCompare(const void *a, const void *b)
 {
-
-    // setting up rules for comparison
     return strcmp(*(const char **)a, *(const char **)b);
 }
 void sort(char **arr, int n)
@@ -82,54 +82,193 @@ void lsl(char *filene)
         }
         closedir(pDir);
     }
+    printf("\n");
 }
 void lsordinary(char *filene)
 {
-    int filepos = 0;
-    char **arr = (char **)malloc(sizeof(char *) * 100);
-    struct dirent *pDirent;
-    DIR *pDir;
-    if (isDir(filene) != 0)
+    if (printfile == 0)
     {
-        arr[filepos] = (char *)malloc(sizeof(char) * strlen(filene) + 10);
-        strcpy(arr[filepos], filene);
-        filepos++;
-    }
-    else
-    {
-        pDir = opendir(filene);
-        while ((pDirent = readdir(pDir)) != NULL)
+        // printf("getting inside condition 0 ");
+        int filepos = 0;
+        char **arr = (char **)malloc(sizeof(char *) * 100);
+        struct dirent *pDirent;
+        DIR *pDir;
+        if (isDir(filene) != 0)
         {
-            if (hide == 1)
+            arr[filepos] = (char *)malloc(sizeof(char) * strlen(filene) + 10);
+            strcpy(arr[filepos], filene);
+            filepos++;
+        }
+        else
+        {
+            pDir = opendir(filene);
+            while ((pDirent = readdir(pDir)) != NULL)
             {
-                arr[filepos] = (char *)malloc(sizeof(char) * strlen(pDirent->d_name) + 10);
-                strcpy(arr[filepos], pDirent->d_name);
-                filepos++;
-                // printf("%s\n", pDirent->d_name);
-            }
-            else if (hide == 0)
-            {
-                if (pDirent->d_name[0] != '.' && pDirent->d_name[strlen(pDirent->d_name) - 1] != '~')
+                if (hide == 1)
                 {
-                    // printf("%s\n", pDirent->d_name);
                     arr[filepos] = (char *)malloc(sizeof(char) * strlen(pDirent->d_name) + 10);
                     strcpy(arr[filepos], pDirent->d_name);
                     filepos++;
                 }
+                else if (hide == 0)
+                {
+                    if (pDirent->d_name[0] != '.' && pDirent->d_name[strlen(pDirent->d_name) - 1] != '~')
+                    {
+                        arr[filepos] = (char *)malloc(sizeof(char) * strlen(pDirent->d_name) + 10);
+                        strcpy(arr[filepos], pDirent->d_name);
+                        filepos++;
+                    }
+                }
             }
+            closedir(pDir);
         }
-        closedir(pDir);
-    }
 
-    sort(arr, filepos);
-    int kk = 0;
-    while (kk < filepos)
+        sort(arr, filepos);
+        int kk = 0;
+        while (kk < filepos)
+        {
+            struct stat name;
+            printf("%s\n", arr[kk]);
+            kk++;
+        }
+        // printf("getting outside condition 0 ");
+    }
+    else if (printfile == 1)
     {
-        struct stat name;
-        // if(!isDir(arr[kk])) printf("\033[1;34m%s\n", arr[kk]);
-        // else if((stat(arr[kk], &name)==0) && name.st_mode & S_IXUSR) printf("\033[1;32m%s\n", arr[kk]);
-        printf("%s\n", arr[kk]);
-        kk++;
+        printfile = 3;
+        printf("getting inside condition 1 ");
+        int fd2 = open(filenammmme, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+        if (fd2 < 0)
+        {
+            perror("Failed to open file.");
+            exit(1);
+        }
+        int original2;
+        dup2(STDOUT_FILENO, original2);
+
+        if (dup2(fd2, STDOUT_FILENO) < 0)
+        {
+            perror("Unable to duplicate file descriptor.");
+            exit(1);
+        }
+
+        close(fd2);
+        int filepos = 0;
+        char **arr = (char **)malloc(sizeof(char *) * 100);
+        struct dirent *pDirent;
+        DIR *pDir;
+        if (isDir(filene) != 0)
+        {
+            arr[filepos] = (char *)malloc(sizeof(char) * strlen(filene) + 10);
+            strcpy(arr[filepos], filene);
+            filepos++;
+        }
+        else
+        {
+            pDir = opendir(filene);
+            while ((pDirent = readdir(pDir)) != NULL)
+            {
+                if (hide == 1)
+                {
+                    arr[filepos] = (char *)malloc(sizeof(char) * strlen(pDirent->d_name) + 10);
+                    strcpy(arr[filepos], pDirent->d_name);
+                    filepos++;
+                }
+                else if (hide == 0)
+                {
+                    if (pDirent->d_name[0] != '.' && pDirent->d_name[strlen(pDirent->d_name) - 1] != '~')
+                    {
+                        arr[filepos] = (char *)malloc(sizeof(char) * strlen(pDirent->d_name) + 10);
+                        strcpy(arr[filepos], pDirent->d_name);
+                        filepos++;
+                    }
+                }
+            }
+            closedir(pDir);
+        }
+
+        sort(arr, filepos);
+        int kk = 0;
+        while (kk < filepos)
+        {
+            struct stat name;
+            printf("%s\n", arr[kk]);
+            kk++;
+        }
+        dup2(original2, STDOUT_FILENO);
+        close(original2);
+        printf("getting outside condition 1 ");
+        return;
+    }
+    else if (printfile == 2)
+    {
+        printfile = 3;
+        printf("getting inside condition 2 ");
+        int fd = open(filenammmme, O_WRONLY | O_APPEND, 0644);
+        if (fd < 0)
+        {
+            perror("Failed to open file.");
+            exit(1);
+        }
+        int original;
+        dup2(STDOUT_FILENO, original);
+
+        if (dup2(fd, STDOUT_FILENO) < 0)
+        {
+            perror("Unable to duplicate file descriptor.");
+            exit(1);
+        }
+
+        close(fd);
+        int filepos = 0;
+        char **arr = (char **)malloc(sizeof(char *) * 100);
+        struct dirent *pDirent;
+        DIR *pDir;
+        if (isDir(filene) != 0)
+        {
+            arr[filepos] = (char *)malloc(sizeof(char) * strlen(filene) + 10);
+            strcpy(arr[filepos], filene);
+            filepos++;
+        }
+        else
+        {
+            pDir = opendir(filene);
+            while ((pDirent = readdir(pDir)) != NULL)
+            {
+                if (hide == 1)
+                {
+                    arr[filepos] = (char *)malloc(sizeof(char) * strlen(pDirent->d_name) + 10);
+                    strcpy(arr[filepos], pDirent->d_name);
+                    filepos++;
+                }
+                else if (hide == 0)
+                {
+                    if (pDirent->d_name[0] != '.' && pDirent->d_name[strlen(pDirent->d_name) - 1] != '~')
+                    {
+                        arr[filepos] = (char *)malloc(sizeof(char) * strlen(pDirent->d_name) + 10);
+                        strcpy(arr[filepos], pDirent->d_name);
+                        filepos++;
+                    }
+                }
+            }
+            closedir(pDir);
+        }
+
+        sort(arr, filepos);
+        int kk = 0;
+        while (kk < filepos)
+        {
+            struct stat name;
+            printf("--->      %s\n", arr[kk]);
+            kk++;
+        }
+        dup2(original, STDOUT_FILENO);
+        close(original);
+        printf("getting outside condition 2 ");
+    }
+    else
+    {
+        return;
     }
 }
 
@@ -138,7 +277,6 @@ void ls(char *CWD, char *HOME, char *input, char **args, int n)
     struct dirent *pDirent;
     const char s[] = " \"\n\t\r";
     char *token;
-    char *filename;
     token = strtok(input, s);
     token = strtok(NULL, s);
     int i = 0;
@@ -169,42 +307,50 @@ void ls(char *CWD, char *HOME, char *input, char **args, int n)
 
     while (token != NULL)
     {
-        if (strcmp(token, "-a") == 0)
-            hide = 1;
-        else if (strcmp(token, "-l") == 0)
-            detail = 1;
-        else if (strcmp(token, "-al") == 0 || strcmp(token, "-la") == 0)
-        {
-            detail = 1;
-            hide = 1;
-        }
-        else if (strcmp(token, "~") == 0)
-        {
-            dirr = 1;
-            if (detail == 0)
-            {
-                lsordinary(HOME);
-                printf("\n");
-            }
-            else if (detail == 1)
-            {
-                lsl(HOME);
-                printf("\n");
-            }
-        }
+        if (strcmp(token, ">") == 0)
+            printfile = 1;
+        else if (strcmp(token, ">>") == 0)
+            printfile = 2;
         else
         {
-            dirr = 1;
-            if (detail == 0)
+            if (printfile == 0)
             {
-                lsordinary(token);
-                printf("\n");
+                if (strcmp(token, "-a") == 0)
+                    hide = 1;
+                else if (strcmp(token, "-l") == 0)
+                    detail = 1;
+                else if (strcmp(token, "-al") == 0 || strcmp(token, "-la") == 0)
+                {
+                    detail = 1;
+                    hide = 1;
+                }
+                else if (strcmp(token, "~") == 0)
+                {
+                    dirr = 1;
+                    if (detail == 0)
+                    {
+                        lsordinary(HOME);
+                    }
+                    else if (detail == 1)
+                    {
+                        lsl(HOME);
+                    }
+                }
+                else
+                {
+                    dirr = 1;
+                    if (detail == 0)
+                    {
+                        lsordinary(token);
+                    }
+                    else if (detail == 1)
+                    {
+                        lsl(token);
+                    }
+                }
             }
-            else if (detail == 1)
-            {
-                lsl(token);
-                printf("\n");
-            }
+            else
+                strcat(filenammmme, token);
         }
         token = strtok(NULL, s);
     }
@@ -213,17 +359,17 @@ void ls(char *CWD, char *HOME, char *input, char **args, int n)
         if (detail == 0)
         {
             lsordinary(".");
-            printf("\n");
         }
         else if (detail == 1)
         {
             lsl(".");
-            printf("\n");
         }
         dirr = 1;
     }
     hide = 0;
     detail = 0;
     dirr = 0;
+    printfile = 0;
+    strcpy(filenammmme, "");
     return;
 }

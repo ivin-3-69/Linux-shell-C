@@ -1,19 +1,19 @@
-ls -l
-ls
-cd glock
-cd ..
-clear
-exit
-cd ..
-cd
-cd ..
-cd OSN
-cd
-cd ..
-cd ~
-cd pussy
-ls
-ls -l
-ls
-ls -l
-ls
+discover ./glock -d
+discover
+discoer ./glock -d
+discover ./glock -d
+discover . -d
+discover ./glock -d
+discover glock -d
+discover
+discover ./glock
+discover ./glock -d
+discover ./glock
+discover -d
+discover ./glock
+discover -d -f
+discover ./glock
+discover ./glock "gg"
+discover . "ee.c"
+discover . ee.c
+discover ./glock -f

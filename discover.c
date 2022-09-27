@@ -13,9 +13,10 @@ void show(char *dirname, char *filename)
     strcpy(ivin, filename);
     strcpy(dirrrr[dirposs], dirname);
     int i = 0;
-
+    // printf("opened directory ---- %s\n", dirrrr[0]);
     while (dirrrr[i] != NULL)
     {
+        // printf("opened directory ---- %s\n", dirrrr[i]);
         struct dirent *pDirent;
         DIR *pDir;
         pDir = opendir(dirrrr[i]);
@@ -23,14 +24,13 @@ void show(char *dirname, char *filename)
         {
             char *namename = (char *)malloc(sizeof(char) * 2000);
             sprintf(namename, "%s/%s", dirrrr[i], pDirent->d_name);
-            // printf("%d\n", opendir(namename));
             if (opendir(namename) > 0)
             {
                 if (pDirent->d_name[0] != '.')
                 {
+                    // printf("%s\n", namename);
                     if (alldir == 1)
                         printf("%s\n", namename);
-
                     dirposs++;
                     dirrrr[dirposs] = (char *)malloc(sizeof(char) * strlen(namename) + 10);
                     strcpy(dirrrr[dirposs], namename);
@@ -40,6 +40,7 @@ void show(char *dirname, char *filename)
             {
                 if (fileexist == 1)
                 {
+                    // printf("kuttapan --- %s ---%s  \n", pDirent->d_name, ivin);
                     if (strcmp(pDirent->d_name, ivin) == 0)
                     {
                         printf("%s\n", namename);
@@ -48,12 +49,11 @@ void show(char *dirname, char *filename)
                 else if (allfiles == 1)
                     printf("%s\n", namename);
             }
-            free(namename);
+            // free(namename);
         }
         i++;
     }
-
-    free(dirrrr);
+    // free(dirrrr);
 }
 
 void discover(char *CWD, char *HOME, char *input, char **args, int n)
@@ -89,6 +89,8 @@ void discover(char *CWD, char *HOME, char *input, char **args, int n)
         }
         j++;
     }
+    // printf("the dir name is -> %s",dirname);
+    // printf("the file name is -> %s",filename);
 
     char *token;
     token = strtok(input, s);

@@ -1,5 +1,4 @@
 #include "headers.h"
-
 void run(char *CWD, char *HOME, char *instr)
 {
     pid_t pid;
@@ -10,7 +9,6 @@ void run(char *CWD, char *HOME, char *instr)
     strcpy(c, instr);
     char histrorypath[2048];
     sprintf(histrorypath, "%s/history.txt", HOME);
-    // printf("%s\n", histrorypath);
 
     FILE *fd;
     fd = fopen(histrorypath, "r");
@@ -24,8 +22,6 @@ void run(char *CWD, char *HOME, char *instr)
         jh++;
     }
     fclose(fd);
-
-    // printf("%d---\n\n\n", jh);
 
     if (jh >= 20)
         delete (HOME);
@@ -84,6 +80,7 @@ void run(char *CWD, char *HOME, char *instr)
     }
     else if (strcmp(args[0], "exit") == 0)
     {
+
         exit(0);
     }
     else if (strcmp(args[0], "history") == 0)
@@ -104,25 +101,28 @@ void run(char *CWD, char *HOME, char *instr)
     }
     else
     {
-        pid = fork();
-        char status[2048];
-        sprintf(status, "/proc/%d", pid);
-        if (pid == 0)
+        if (strcmp(args[0], "echo") != 0)
         {
-            execvp(args[0], args);
-            perror("execvp");
-            exit(1);
-        }
-        else
-        {
-            if (!backgrnd)
+            pid = fork();
+            char status[2048];
+            sprintf(status, "/proc/%d", pid);
+            if (pid == 0)
             {
-                wait(NULL);
-                return;
+                execvp(args[0], args);
+                perror("execvp");
+                exit(1);
             }
             else
             {
-                return;
+                if (!backgrnd)
+                {
+                    wait(NULL);
+                    return;
+                }
+                else
+                {
+                    return;
+                }
             }
         }
     }
